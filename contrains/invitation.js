@@ -1,0 +1,1 @@
+export const INVITATION_EXPIRED_DAYS = 3;

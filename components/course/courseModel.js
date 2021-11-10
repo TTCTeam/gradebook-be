@@ -1,21 +1,21 @@
-import sequelize from 'sequelize';
+import Sequelize from 'sequelize';
 import db from '../../db/db.js';
 
 const Course = db.define(
   'Course',
   {
     id: {
-      type: sequelize.INTEGER,
+      type: Sequelize.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: sequelize.STRING,
-    lecturer: sequelize.STRING,
-    description: sequelize.STRING,
+    name: Sequelize.STRING,
+    lecturer: Sequelize.STRING,
+    description: Sequelize.STRING,
   },
   {
-    tableName: 'COURSE',
-    timestamps: false
+    timestamps: false,
+    underscored: true
   }
 );
 
