@@ -3,6 +3,8 @@ import { INVITATION_EXPIRED_DAYS } from '../../contrains/invitation.js';
 import invitationRepository from './invitation/invitationRepository.js';
 import courseRepository from './courseRepository.js';
 import { addDays } from '../../utils/dateUtils.js';
+import invitationMailTemplate from '../../contrains/invitationMailTemplate.js';
+import { sendMail } from '../mail-sender/mailSenderService.js';
 
 async function getAllCourses() {
   return await courseRepository.findAll();
@@ -37,7 +39,12 @@ async function joinCourse(courseId, invitationCode) {
   return false;
 }
 
+async function sendInvitationMail(emails) {
+  const htmlContent = invitationMailTemplate('ahihi');
+  return await sendMail(emails, htmlContent);
+}
+
 export default {
   getAllCourses, addCourse,
-  createInvitation, joinCourse
+  createInvitation, joinCourse, sendInvitationMail
 };

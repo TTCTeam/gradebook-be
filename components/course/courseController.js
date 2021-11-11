@@ -11,15 +11,21 @@ export const createCourse = async (req, res) => {
   res.status(201).json(addedCourse);
 };
 
-export const createInvitation = async (req, res)=>{
+export const createInvitation = async (req, res) => {
   const { courseId } = req.params;
-   const invitation = await courseService.createInvitation(courseId);
-   res.status(200).json(invitation)
-}
+  const invitation = await courseService.createInvitation(courseId);
+  res.status(200).json(invitation);
+};
 
 export const joinCourse = async (req, res) => {
   const { courseId } = req.params;
   const { invitationCode } = req.query;
   const isSuccessful = await courseService.joinCourse(courseId, invitationCode);
   res.status(200).json(isSuccessful);
-}
+};
+
+export const sendInvitationMail = async (req, res) => {
+  const emails = req.body;
+  const successfulList = await courseService.sendInvitationMail(emails);
+  res.status(200).json(successfulList);
+};
