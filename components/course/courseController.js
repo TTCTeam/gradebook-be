@@ -19,8 +19,8 @@ export const createInvitation = async (req, res) => {
 
 export const joinCourse = async (req, res) => {
   const { courseId } = req.params;
-  const { invitationCode } = req.query;
-  const isSuccessful = await courseService.joinCourse(courseId, invitationCode);
+  const { invitationId } = req.query;
+  const isSuccessful = await courseService.joinCourse(courseId, invitationId);
   res.status(200).json(isSuccessful);
 };
 

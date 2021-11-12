@@ -1,10 +1,11 @@
-import { v4 as uuid } from 'uuid';
 import { INVITATION_EXPIRED_DAYS } from '../../contrains/invitation.js';
 import invitationRepository from './invitation/invitationRepository.js';
 import courseRepository from './courseRepository.js';
 import { addDays } from '../../utils/dateUtils.js';
 import invitationMailTemplate from '../../contrains/invitationMailTemplate.js';
 import { sendMail } from '../mail-sender/mailSenderService.js';
+import { nanoid } from 'nanoid';
+import { MemberRoles } from '../../contrains/course.js';
 
 async function getAllCourses() {
   return await courseRepository.findAll();
@@ -20,20 +21,32 @@ async function addCourse(course) {
 
 async function createInvitation(courseId) {
   // check course is exist
-  //
-  const invitationCode = uuid();
+  const course = await courseRepository.findById(courseId);
+  if (!course) {
+    console.log(course);
+    throw "nvbnbn";
+  }
+
+  const invitationId = nanoid();
   const expiredDate = addDays(Date.now(), INVITATION_EXPIRED_DAYS);
-  const newInvitation = await invitationRepository.create({ courseId, invitationCode, expiredDate });
+  const newInvitation = await invitationRepository.create({
+    id: invitationId,
+    courseId,
+    memberRole: MemberRoles.STUDENT,
+    expiredDate
+  });
   console.log(newInvitation);
   return newInvitation;
 }
 
-async function joinCourse(courseId, invitationCode) {
-  const invitation = await invitationRepository.findByCourseIdAndInvitationCode(courseId, invitationCode);
+async function joinCourse(courseId, invitationId) {
+  const invitation = await invitationRepository.findByCourseIdAndInvitationId(courseId, invitationId);
   if (invitation) {
     // join to class
     console.log('Join');
-    console.log(invitation);
+    if (invitation.getDataValue('isDisposable')){
+      await invitationRepository.deleteById(invitationId);
+    }
     return true;
   }
   return false;

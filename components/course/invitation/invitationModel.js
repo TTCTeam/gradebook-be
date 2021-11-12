@@ -5,12 +5,15 @@ const Invitation = db.define(
   'Invitation',
   {
     id: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.CHAR(21),
       primaryKey: true,
-      autoIncrement: true
     },
     courseId: Sequelize.INTEGER,
-    invitationCode: Sequelize.UUID,
+    memberRole: Sequelize.INTEGER,
+    isDisposable: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     expiredDate: Sequelize.DATE
   },
   {
