@@ -22,9 +22,3 @@ export async function checkDuplicateEmail(email) {
   }
   return null;
 }
-
-export async function testService(){
-
-  return await getAllCourses();
-
-}

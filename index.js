@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "30mb" }));
 app.use("/", cors());
 
 app.use("/courses", courseRouter);
-app.get('/auth', authRouter);
+app.use('/auth', authRouter);
 
 app.get("/", (req, res) => {
   res.send("SUCCESS");

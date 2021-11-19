@@ -1,5 +1,9 @@
-import { getAllRoles } from "../roles/roleService.js";
-import { checkDuplicateEmail, checkDuplicateUsername, testService } from "./authService.js";
+import { compareSync, hashSync } from "bcryptjs";
+import pkg from 'jsonwebtoken';
+const { Jwt } = pkg;
+import User from "../users/userModel.js";
+import { SALT, serect } from "./auth.config.js";
+import { checkDuplicateEmail, checkDuplicateUsername } from "./authService.js";
 
 export const checkExistedEmailOrUsername = async (req, res, next) => {
   const { email, username } = req.body;
@@ -24,20 +28,59 @@ export const checkExistedEmailOrUsername = async (req, res, next) => {
   }
 }
 
-export const checkExistedRole = async (req,res,next)=>{
-  const {role}=req.body;
+export const signup =async(req,res,next)=>{
 
-  if(req.body.role){
-    const roles = await getAllRoles();
+  const {username,email,password} = req.body;
+  const hashPassword = hashSync(password,SALT);
 
-    if(!roles.includes(role)){
-      res.status(400).send({message:"Failed! Role does not exist."});
-    }
+  try{
+    const newUser = await User.create({
+      username:username,
+      email:email,
+      password:hashPassword
+    });
+
+    res.status(200).send(newUser);
+
+  }catch(err){
+    res.status(403).send({
+      message:err.message
+    })
   }
-  next();
+
+
 }
 
-export const testController = async (req,res,next)=>{
-  const test = await testService();
-  res.send(test);
+export const signin = async(req,res,next)=>{
+
+  const {username,email, password} = req.body;
+
+  try{
+    const existedUser = await User.findOne({where:{email:email}});
+    const passwordIsValid = compareSync(password, existedUser.password);
+    
+    if(!passwordIsValid){
+      res.status(401).send({
+         accessToken:null,
+         message:"Invalid Password!"
+      })
+    }
+
+    const token = Jwt.sign({id:existedUser.id},serect,{
+      expiresIn:1000 //10s
+    });
+
+    res.status(200).send({
+      id:existedUser.id,
+      email:email,
+      role:null,
+      accessToken:token
+    });
+
+  }catch(err){
+    res.status(500).send({
+      accessToken:null,
+      message:err.message
+    })
+  }
 }

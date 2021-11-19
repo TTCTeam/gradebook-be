@@ -18,6 +18,10 @@ const User = db.define(
     password:{
       type:Sequelize.STRING,
     }
+  },
+  {
+    timestamps: false,
+    underscored: true
   }
 );
 

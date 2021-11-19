@@ -5,5 +5,13 @@ export async function findUserByEmail(email) {
 }
 
 export async function findUserByUsername(username) {
-  return User.findOne({ where: { username: username } }); 
+  return User.findOne({ where: { username: username } });
+}
+
+export async function createUser(newUser) {
+  return User.create({
+    username: username,
+    email: email,
+    password: hashPassword
+  });
 }
