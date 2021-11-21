@@ -10,8 +10,8 @@ export async function findUserByUsername(username) {
 
 export async function createUser(newUser) {
   return User.create({
-    username: username,
-    email: email,
-    password: hashPassword
+    username: newUser.username,
+    email: newUser.email,
+    password: newUser.password
   });
 }
