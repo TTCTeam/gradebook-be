@@ -1,11 +1,7 @@
 import Course from './courseModel.js';
 
-async function findAll() {
-  return Course.findAll();
+async function findById(courseId) {
+  return Course.findByPk(courseId);
 }
 
-async function create(course) {
-  return Course.create(course);
-}
-
-export default { findAll, create };
+export default { ...Course, findById };

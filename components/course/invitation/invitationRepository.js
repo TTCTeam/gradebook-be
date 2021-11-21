@@ -1,14 +1,15 @@
 import Invitation from './invitationModel.js';
 
-async function findByCourseIdAndInvitationCode(courseId, invitationCode) {
+async function findByCourseIdAndInvitationId(courseId, invitationId) {
   return Invitation.findOne(
-    { where: { courseId, invitationCode } }
+    { where: { id: invitationId, courseId } }
   );
 }
 
-async function create(invitation) {
-  return Invitation.create(invitation);
+async function deleteById(invitationId) {
+  return Invitation.destroy(
+    { where: { id: invitationId } });
 }
 
-export default { findByCourseIdAndInvitationCode, create };
+export default { ...Invitation, findByCourseIdAndInvitationId, deleteById };
 
