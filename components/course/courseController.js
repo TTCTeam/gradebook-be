@@ -13,8 +13,12 @@ export const createCourse = async (req, res) => {
 
 export const createInvitation = async (req, res) => {
   const { courseId } = req.params;
-  const invitation = await courseService.createInvitation(courseId);
-  res.status(200).json(invitation);
+  try {
+    const invitation = await courseService.createInvitation(courseId);
+    res.status(200).json(invitation);
+  } catch (e) {
+    res.status(400).json(e.message);
+  }
 };
 
 export const joinCourse = async (req, res) => {
