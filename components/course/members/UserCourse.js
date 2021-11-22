@@ -1,8 +1,8 @@
 import  Sequelize from "sequelize";
-import Course from "../components/course/courseModel.js";
-import Role from "../components/roles/roleModel.js";
-import User from "../components/users/userModel.js";
-import db from "./db.js";
+import Course from "../courseModel.js";
+import Role from "../../roles/roleModel.js";
+import User from "../../users/userModel.js";
+import db from "../../../db/db.js";
 
 const UserCourse = db.define(
   'UserCourse',

@@ -15,7 +15,16 @@ const User = db.define(
     email:{
       type:Sequelize.STRING,
     },
+    firstname:{
+      type:Sequelize.STRING,
+    },
+    lastname:{
+      type:Sequelize.STRING,
+    },
     password:{
+      type:Sequelize.STRING,
+    },
+    googleId:{
       type:Sequelize.STRING,
     }
   },

@@ -2,7 +2,7 @@ import pkg from 'bcryptjs';
 const { compareSync, hashSync } = pkg;
 import jsonwebtoken from 'jsonwebtoken';
 import { EXPIRY, SALT, serect } from "./auth.config.js";
-import { findUserByEmail, findUserByUsername } from './authRepository.js';
+import { findUserByEmail, findUserByUsername } from '../users/userService.js';
 import { checkDuplicateEmail, checkDuplicateUsername, createNewUser } from "./authService.js";
 
 export const checkExistedEmailOrUsername = async (req, res, next) => {
@@ -72,6 +72,7 @@ export const signin = async (req, res, next) => {
       username: user.username,
       id: user.id,
     },
-    accessToken: token
+    accessToken: token,
+    expiresIn: EXPIRY
   });
 }

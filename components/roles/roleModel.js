@@ -2,6 +2,7 @@ import Sequelize from "sequelize";
 import db from "../../db/db.js";
 export const TEACHER = 'TEACHER';
 export const STUDENT = 'STUDENT';
+export const OWNER = 'OWNER';
 const Role = db.define(
   'Role',
   {
