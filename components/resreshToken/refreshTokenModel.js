@@ -1,6 +1,6 @@
 import Sequelize from "sequelize";
-import User from "../components/users/userModel.js";
-import db from "./db.js";
+import User from "../users/userModel.js";
+import db from "../../db/db.js";
 
 const RefreshToken = db.define('RefreshToken',
   {

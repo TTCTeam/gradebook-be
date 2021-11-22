@@ -1,7 +1,6 @@
 import pkg from 'bcryptjs';
 const { compareSync } = pkg;
-import { getAllCourses } from "../course/courseController.js";
-import { createUser, findUserByEmail, findUserByUsername } from "./authRepository.js"
+import { createUser, findUserByEmail, findUserByUsername } from "../users/userService.js"
 
 export async function checkDuplicateUsername(username) {
   if(username){
@@ -9,9 +8,8 @@ export async function checkDuplicateUsername(username) {
     if (user) {
       return true;
     }
-    return false;
   }
-  return null;
+  return false;
 }
 
 export async function checkDuplicateEmail(email) {
@@ -20,9 +18,8 @@ export async function checkDuplicateEmail(email) {
     if (user) {
       return true;
     }
-    return false;
   }
-  return null;
+  return false;
 }
 
 export async function checkCredential(usernameOrEmail,password){
