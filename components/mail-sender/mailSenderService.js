@@ -16,10 +16,9 @@ const transporter = nodemailer.createTransport({
 
 export async function sendMail(emails, htmlContent) {
   const options = {
-    from: 'NQH-Test nodemailer',
+    from: 'TTC Team',
     to: emails,
-    subject: 'Test Nodemailer',
-    text: 'Your text is here',
+    subject: 'Invitation to classroom',
     html: htmlContent
   };
 

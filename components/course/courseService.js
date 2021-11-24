@@ -82,7 +82,7 @@ async function createInvitation(courseId, role = MemberRoles.STUDENT, isDisposab
   const course = await Course.findByPk(courseId);
   if (!course) {
     console.log(course);
-    throw Error('The course id is invalid.');
+    throw new Error('The course id is invalid.');
   }
 
   const invitationId = nanoid();
@@ -103,25 +103,28 @@ async function createInvitation(courseId, role = MemberRoles.STUDENT, isDisposab
 }
 
 async function joinCourse(courseId, userId, invitationId) {
+  const member = await CourseMember.findOne({ where: { courseId, userId } });
+  if (member) {
+    throw new Error('You have already a member of this class.');
+  }
+
   const course = await Course.findByPk(courseId);
   const user = await User.findByPk(userId);
   const invitation = await Invitation.findOne({ where: { courseId, id: invitationId } });
-
   if (!course || !invitation || invitation.expiredDate < Date.now()) {
-    throw Error('Invitation link is invalid or expired.');
+    throw new Error('Invitation link is invalid or expired.');
   }
   // join to class
   await course.addMember(user, { through: { role: invitation.role } });
-  const members = await course.getMembers();
   if (invitation.isDisposable) {
     await Invitation.destroy({ where: { id: invitationId } });
   }
-  return members;
 }
 
 async function sendInvitationMail(courseId, emails, role) {
   const invitation = await createInvitation(courseId, role, false);
-  const htmlContent = invitationMailTemplate(`${invitation.invitationLink} + ${role} + ${invitation.expiredDate}`);
+  const course = await Course.findByPk(courseId);
+  const htmlContent = invitationMailTemplate(course.name, role, invitation);
   return await sendMail(emails, htmlContent);
 }
 
