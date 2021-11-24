@@ -1,7 +1,8 @@
 import courseService from './courseService.js';
 
-export const getAllCourses = async (req, res) => {
-  const courses = await courseService.getAllCourses();
+export const getAllCoursesOfUser = async (req, res) => {
+  // const userId = req.user.id;
+  const courses = await courseService.getAllCoursesOfUser(1);
   res.status(200).json(courses);
 };
 
@@ -51,16 +52,16 @@ export const joinCourse = async (req, res) => {
   const { invitationId } = req.query;
   const user = { id: 1 };
   try {
-    const newVar = await courseService.joinCourse(courseId, user.id, invitationId);
-    // res.redirect(`${BACK_END_HOSTNAME}/courses`);
-    res.json(newVar);
+    await courseService.joinCourse(courseId, user.id, invitationId);
+    res.status(200).send();
   } catch (e) {
     res.status(400).json(e.message);
   }
 };
 
 export const sendInvitationMail = async (req, res) => {
-  const emails = req.body;
-  const successfulList = await courseService.sendInvitationMail(emails);
+  const { courseId } = req.params;
+  const {emails, role} = req.body;
+  const successfulList = await courseService.sendInvitationMail(courseId, emails, role);
   res.status(200).json(successfulList);
 };

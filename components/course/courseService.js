@@ -13,8 +13,15 @@ import { FRONT_END_HOSTNAME } from "../../contrains/host.js";
 
 const { Op } = pkg;
 
-async function getAllCourses() {
-  return await Course.findAll();
+async function getAllCourses(userId) {
+  const user = await User.findByPk(userId);
+  const courses = await user.getCourses();
+  return courses.map(course => ({
+    id: course.id,
+    name: course.name,
+    lecturer: course.lecturer,
+    description: course.description
+  }));
 }
 
 async function getCourseById(courseId) {
@@ -71,7 +78,7 @@ async function addCourse(course, userId) {
   }
 }
 
-async function createInvitation(courseId) {
+async function createInvitation(courseId, role = MemberRoles.STUDENT, isDisposable = false) {
   const course = await Course.findByPk(courseId);
   if (!course) {
     console.log(course);
@@ -82,8 +89,9 @@ async function createInvitation(courseId) {
   const expiredDate = addDays(Date.now(), INVITATION_EXPIRED_DAYS);
   const invitation = await Invitation.create({
       id: invitationId,
-      role: MemberRoles.STUDENT,
+      role,
       expiredDate,
+      isDisposable,
       courseId
     },
   );
@@ -111,8 +119,9 @@ async function joinCourse(courseId, userId, invitationId) {
   return members;
 }
 
-async function sendInvitationMail(emails) {
-  const htmlContent = invitationMailTemplate('ahihi');
+async function sendInvitationMail(courseId, emails, role) {
+  const invitation = await createInvitation(courseId, role, false);
+  const htmlContent = invitationMailTemplate(`${invitation.invitationLink} + ${role} + ${invitation.expiredDate}`);
   return await sendMail(emails, htmlContent);
 }
 
@@ -121,7 +130,7 @@ function makeInvitationLink(invitation) {
 }
 
 export default {
-  getAllCourses, addCourse,
+  getAllCoursesOfUser: getAllCourses, addCourse,
   createInvitation, joinCourse, sendInvitationMail,
   getCourseById, getRoleInCourse, getLecturers, getStudents
 };
