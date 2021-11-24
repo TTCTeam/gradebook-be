@@ -2,8 +2,6 @@ import express from 'express';
 import passport from 'passport';
 import { checkExistedEmailOrUsername, signin, signup } from './authController.js';
 import { verifyGoogleToken, verifyToken } from './authJwt.js';
-import { verifyToken } from "./authJwt.js";
-
 
 const authRouter = express.Router();
 
