@@ -4,6 +4,7 @@ import Course from '../course/courseModel.js';
 import Role, { STUDENT, TEACHER } from "../roles/roleModel.js";
 import User from '../users/userModel.js';
 import { serect } from "./auth.config.js";
+import { OAuth2Client } from 'google-auth-library';
 
 const catchError = (err, res) => {
   if (err instanceof TokenExpiredError) {
@@ -88,5 +89,33 @@ export const isTecher = async (req, res, next) => {
   }
 
   return;
+
+}
+
+export const verifyGoogleToken = async (req, res, next) => {
+  const idToken = req.headers["x-goog-iap-jwt-assertion"];
+
+  const oAuth2Client = new OAuth2Client(process.env.GCLIENT_ID);
+
+  try {
+    const ticket = await oAuth2Client.verifyIdToken({
+      idToken: idToken,
+      audience: process.env.GGCLINET_ID
+    });
+
+    const user = ticket.getPayload();
+    console.log(user);
+
+    req.body = {
+      username: user.email,
+    };
+    next();
+
+  } catch (err) {
+
+    res.status(401).send({
+      message: "Unauthorized! Access token was expired."
+    });
+  }
 
 }

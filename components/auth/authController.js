@@ -17,7 +17,13 @@ export const checkExistedEmailOrUsername = async (req, res, next) => {
         message: "Failed! Email is already in use"
       });
     }
+  } else {
+    res.status(400).send({
+      message: "Failed! Email is undefine"
+    });
+    return;
   }
+
   if (username) {
     isDuplicatedUsername = await checkDuplicateUsername(username);
 
@@ -26,7 +32,14 @@ export const checkExistedEmailOrUsername = async (req, res, next) => {
         message: "Failed! Username is already in use"
       });
     }
+
+  } else {
+    res.status(400).send({
+      message: "Failed! Email is undefine"
+    });
+    return;
   }
+
   if (!isDuplicatedEmail && !isDuplicatedUsername) {
     next();
   }
@@ -34,15 +47,21 @@ export const checkExistedEmailOrUsername = async (req, res, next) => {
 
 export const signup = async (req, res, next) => {
 
-  const { username, email, password } = req.body;
-  const hashPassword = hashSync(password, SALT);
+  const { username, email, password, firstname, lastname } = req.body;
+  const hashPassword = password ? hashSync(password, SALT) : null;
+
+  const user = {
+    username: username,
+    email: email,
+    password: hashPassword,
+    firstname: firstname,
+    lastname: lastname,
+  }
+
+  console.log(user);
 
   try {
-    const newUser = await createNewUser({
-      username: username,
-      email: email,
-      password: hashPassword
-    })
+    const newUser = await createNewUser(user)
     res.status(200).send(newUser);
 
   } catch (err) {
@@ -55,24 +74,30 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
 
-  const { username, email } = req.body;
+  const { username } = req.body;
+  console.log(req.body);
 
-  const hasEmail = await findUserByEmail(email);
+  const hasEmail = await findUserByEmail(username);
   const hasUsername = await findUserByUsername(username);
 
   const user = hasEmail || hasUsername;
+  console.log(user);
+
+  if (!user) {
+    res.status(400).send({
+      message: "Failed! Your account coudn't be found in database."
+    });
+  }
 
   const token = jsonwebtoken.sign({ id: user.id }, serect, {
     expiresIn: EXPIRY //10s
   });
 
   res.status(200).send({
-    user: {
-      email: user.email,
-      username: user.username,
-      id: user.id,
-    },
-    accessToken: token,
+    email: user.email,
+    username: user.username,
+    id: user.id,
+    token: token,
     expiresIn: EXPIRY
   });
 }

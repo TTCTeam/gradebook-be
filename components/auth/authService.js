@@ -23,6 +23,8 @@ export async function checkDuplicateEmail(email) {
 }
 
 export async function checkCredential(usernameOrEmail,password){
+
+  if(!password) return false;
   const hasEmail = await findUserByEmail(usernameOrEmail);
   const hasUsername=await findUserByUsername(usernameOrEmail);
 
@@ -34,8 +36,9 @@ export async function checkCredential(usernameOrEmail,password){
     if(!passwordIsValid){
       return false;
     }
-
+    console.log(user,'true');
     return user;
+    
   }
   return null;
 }
@@ -48,3 +51,4 @@ export async function createNewUser(newUser){
     throw new Error({message:err.message});
   }
 }
+
