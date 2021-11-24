@@ -1,16 +1,16 @@
 import courseService from './courseService.js';
 
 export const getAllCoursesOfUser = async (req, res) => {
-  // const userId = req.user.id;
-  const courses = await courseService.getAllCoursesOfUser(1);
+  const userId = req.userId;
+  const courses = await courseService.getAllCoursesOfUser(userId);
   res.status(200).json(courses);
 };
 
 export const getCourseById = async (req, res) => {
   const { courseId } = req.params;
-  // const userId = req.user.id;
+  const userId = req.userId;
   const course = await courseService.getCourseById(courseId);
-  const role = await courseService.getRoleInCourse(courseId, 1);
+  const role = await courseService.getRoleInCourse(courseId, userId);
   if (!course || !role){
     res.status(400).json('The course id is invalid.');
     return;
@@ -32,8 +32,8 @@ export const getStudents = async (req, res) => {
 
 export const createCourse = async (req, res) => {
   const course = req.body;
-  // const userId = req.user.id;
-  const addedCourse = await courseService.addCourse(course, 1);
+  const userId = req.userId;
+  const addedCourse = await courseService.addCourse(course, userId);
   res.status(201).json(addedCourse);
 };
 
@@ -50,9 +50,9 @@ export const createInvitation = async (req, res) => {
 export const joinCourse = async (req, res) => {
   const { courseId } = req.params;
   const { invitationId } = req.query;
-  const user = { id: 1 };
+  const userId = req.userId;
   try {
-    await courseService.joinCourse(courseId, user.id, invitationId);
+    await courseService.joinCourse(courseId, userId, invitationId);
     res.status(200).send();
   } catch (e) {
     res.status(400).json(e.message);

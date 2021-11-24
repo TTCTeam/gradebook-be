@@ -8,7 +8,7 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.e
   port: process.env.DB_PORT,
   dialect: 'mysql',
   pool: {
-    max: 5,
+    max: 10,
     min: 0,
     idle: 10000
   }
