@@ -1,8 +1,5 @@
 import jsonwebtoken from 'jsonwebtoken';
 const { TokenExpiredError } = jsonwebtoken;
-import Course from '../course/courseModel.js';
-import Role, { STUDENT, TEACHER } from "../roles/roleModel.js";
-import User from '../users/userModel.js';
 import { serect } from "./auth.config.js";
 import { OAuth2Client } from 'google-auth-library';
 

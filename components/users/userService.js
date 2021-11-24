@@ -1,5 +1,9 @@
 import User from "../users/userModel.js";
 
+export async function findUserById(userId){
+  return await User.findByPk(userId);
+}
+
 export async function findUserByEmail(email) {
   if(email){
     return User.findOne({ where: { email: email } });
