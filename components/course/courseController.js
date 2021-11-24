@@ -5,9 +5,34 @@ export const getAllCourses = async (req, res) => {
   res.status(200).json(courses);
 };
 
+export const getCourseById = async (req, res) => {
+  const { courseId } = req.params;
+  // const userId = req.user.id;
+  const course = await courseService.getCourseById(courseId);
+  const role = await courseService.getRoleInCourse(courseId, 1);
+  if (!course || !role){
+    res.status(400).json('The course id is invalid.');
+    return;
+  }
+  res.status(200).json({ course, role });
+};
+
+export const getLecturers = async (req, res) => {
+  const { courseId } = req.params;
+  const lecturers = await courseService.getLecturers(courseId);
+  res.status(200).json(lecturers);
+}
+
+export const getStudents = async (req, res) => {
+  const { courseId } = req.params;
+  const students = await courseService.getStudents(courseId);
+  res.status(200).json(students);
+}
+
 export const createCourse = async (req, res) => {
   const course = req.body;
-  const addedCourse = await courseService.addCourse(course);
+  // const userId = req.user.id;
+  const addedCourse = await courseService.addCourse(course, 1);
   res.status(201).json(addedCourse);
 };
 
@@ -24,8 +49,14 @@ export const createInvitation = async (req, res) => {
 export const joinCourse = async (req, res) => {
   const { courseId } = req.params;
   const { invitationId } = req.query;
-  const isSuccessful = await courseService.joinCourse(courseId, invitationId);
-  res.status(200).json(isSuccessful);
+  const user = { id: 1 };
+  try {
+    const newVar = await courseService.joinCourse(courseId, user.id, invitationId);
+    // res.redirect(`${BACK_END_HOSTNAME}/courses`);
+    res.json(newVar);
+  } catch (e) {
+    res.status(400).json(e.message);
+  }
 };
 
 export const sendInvitationMail = async (req, res) => {

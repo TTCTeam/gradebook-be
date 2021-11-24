@@ -1,5 +1,6 @@
 import Sequelize from 'sequelize';
 import db from '../../../db/db.js';
+import Course from "../courseModel.js";
 
 const Invitation = db.define(
   'Invitation',
@@ -8,8 +9,7 @@ const Invitation = db.define(
       type: Sequelize.CHAR(21),
       primaryKey: true,
     },
-    courseId: Sequelize.INTEGER,
-    memberRole: Sequelize.INTEGER,
+    role: Sequelize.INTEGER,
     isDisposable: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
@@ -21,5 +21,7 @@ const Invitation = db.define(
     underscored: true,
   }
 );
+
+Invitation.belongsTo(Course, { foreignKey: 'courseId' });
 
 export default Invitation;
