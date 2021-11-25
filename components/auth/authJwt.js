@@ -8,6 +8,10 @@ const catchError = (err, res) => {
     return res.status(401).send({
       message: "Unauthorized! Access token was expired."
     });
+  }else{
+    return res.status(401).send({
+      message: "Unauthorized!"
+    });
   }
 }
 
@@ -23,10 +27,7 @@ export const verifyToken = async (req, res, next) => {
   jsonwebtoken.verify(token, serect, (err, decoded) => {
 
     if (err) {
-      // return catchError(err, res);
-      return res.status(401).send({
-        message: "Unauthorized!"
-      });
+      return catchError(err, res);
     }
     req.userId = decoded.id;
     next();
