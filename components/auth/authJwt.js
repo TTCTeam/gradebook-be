@@ -1,4 +1,4 @@
-import jsonwebtoken from 'jsonwebtoken';
+import jsonwebtoken, { decode } from 'jsonwebtoken';
 const { TokenExpiredError } = jsonwebtoken;
 import { serect } from "./auth.config.js";
 import { OAuth2Client } from 'google-auth-library';
@@ -23,13 +23,15 @@ export const verifyToken = async (req, res, next) => {
       message: "No token provided!"
     });
   }
+  console.log(token);
 
-  jsonwebtoken.verify(token, serect, (err, decoded) => {
+  jsonwebtoken.verify(token, serect,{ algorithms: 'HS256' }, (err, decoded) => {
 
     if (err) {
       return catchError(err, res);
     }
     req.userId = decoded.id;
+    console.log(decoded.id,'userId');
     next();
   });
 }
@@ -49,7 +51,11 @@ export const verifyGoogleToken = async (req, res, next) => {
     console.log(user);
 
     req.body = {
-      username: user.email,
+      email: user.email,
+      username: null,
+      password: null,
+      firstname: user.given_name,
+      lastname: user.family_name
     };
     next();
 

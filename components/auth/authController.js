@@ -62,10 +62,16 @@ export const signup = async (req, res, next) => {
 
   try {
     const newUser = await createNewUser(user)
-    res.status(200).send(newUser);
-
+    req.body = {
+      username: newUser.username,
+      email: newUser.email,
+      password: newUser.password,
+      firstname: newUser.firstname,
+      lastname: newUser.lastname
+    }
+    return next();
   } catch (err) {
-    res.status(500).send({
+    return res.status(500).send({
       message: err.message
     })
   }
@@ -74,14 +80,19 @@ export const signup = async (req, res, next) => {
 
 export const signin = async (req, res, next) => {
 
-  const { username } = req.body;
+  const { username, email } = req.body;
   console.log(req.body);
 
-  const hasEmail = await findUserByEmail(username);
-  const hasUsername = await findUserByUsername(username);
-
+  let hasEmail, hasUsername;
+  if(!email){
+    hasEmail = await findUserByEmail(username);
+    hasUsername = await findUserByUsername(username);
+  }else{
+    hasEmail = await findUserByEmail(email);
+    hasUsername = await findUserByUsername(email);
+  }
+  
   const user = hasEmail || hasUsername;
-  console.log(user);
 
   if (!user) {
     res.status(400).send({
@@ -89,7 +100,7 @@ export const signin = async (req, res, next) => {
     });
   }
 
-  const token = jsonwebtoken.sign({ id: user.id }, serect, {
+  const token = jsonwebtoken.sign({ id: user.id }, serect,{ algorithm: 'HS256',
     expiresIn: EXPIRY //10s
   });
 
@@ -101,3 +112,38 @@ export const signin = async (req, res, next) => {
     expiresIn: EXPIRY
   });
 }
+
+export const checkExistedAndRegistAccount = async (req, res, next) => {
+  const { email, username, firstname, lastname, password } = req.body;
+
+  const isExistAccount = await checkDuplicateEmail(email);
+
+  if (isExistAccount) {
+    return next();
+  } else {
+    const user = {
+      username: username,
+      email: email,
+      password: password,
+      firstname: firstname,
+      lastname: lastname,
+    }
+    try {
+      const newUser = await createNewUser(user)
+      req.body = {
+        username: newUser.username,
+        email: newUser.email,
+        password: newUser.password,
+        firstname: newUser.firstname,
+        lastname: newUser.lastname
+      }
+      return next();
+
+    } catch (err) {
+      return res.status(500).send({
+        message: err.message
+      })
+    }
+
+  }
+};
