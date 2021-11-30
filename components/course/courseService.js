@@ -8,7 +8,7 @@ import { MemberRoles } from '../../contrains/course.js';
 import Course from "./courseModel.js";
 import Invitation from "./invitation/invitationModel.js";
 import User from "../users/userModel.js";
-import CourseMember from "./members/courseMemberModel.js";
+import CourseMember from "./member/courseMemberModel.js";
 import { FRONT_END_HOSTNAME } from "../../contrains/host.js";
 
 const { Op } = pkg;

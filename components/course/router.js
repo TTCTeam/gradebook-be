@@ -7,17 +7,27 @@ import {
   joinCourse,
   sendInvitationMail
 } from './courseController.js';
-import { verifyToken } from '../auth/authJwt.js';
+import {
+  createAssignment,
+  deleteAssignment,
+  editAssignment,
+  getAllAssignmentsOfCourse, updateOrder
+} from './assignment/assignmentController.js';
 
 const router = express.Router();
 
-router.get("/", verifyToken, getAllCoursesOfUser);
-router.get("/:courseId", verifyToken, getCourseById);
-router.get("/:courseId/lecturers", verifyToken, getLecturers);
-router.get("/:courseId/students", verifyToken, getStudents);
-router.post("/", verifyToken, createCourse);
-router.get("/:courseId/invite-link", verifyToken, createInvitation);
-router.get("/:courseId/join/", verifyToken, joinCourse);
-router.post("/:courseId/invite", verifyToken, sendInvitationMail);
+router.get("/", getAllCoursesOfUser);
+router.post("/", createCourse);
+router.get("/:courseId", getCourseById);
+router.get("/:courseId/lecturers", getLecturers);
+router.get("/:courseId/students", getStudents);
+router.get("/:courseId/invite-link", createInvitation);
+router.get("/:courseId/join/", joinCourse);
+router.post("/:courseId/invite", sendInvitationMail);
+router.get("/:courseId/assignments", getAllAssignmentsOfCourse);
+router.post("/:courseId/assignments", createAssignment);
+router.put("/:courseId/assignments/:assignmentId", editAssignment);
+router.delete("/:courseId/assignments/:assignmentId", deleteAssignment);
+router.put("/:courseId/assignments", updateOrder);
 
 export default router;
