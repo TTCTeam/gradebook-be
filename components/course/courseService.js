@@ -9,7 +9,6 @@ import Course from "./courseModel.js";
 import Invitation from "./invitation/invitationModel.js";
 import User from "../users/userModel.js";
 import CourseMember from "./member/courseMemberModel.js";
-import { FRONT_END_HOSTNAME } from "../../contrains/host.js";
 
 const { Op } = pkg;
 
@@ -129,7 +128,7 @@ async function sendInvitationMail(courseId, emails, role) {
 }
 
 function makeInvitationLink(invitation) {
-  return `${FRONT_END_HOSTNAME}/courses/${invitation.courseId}/join?invitationId=${invitation.id}`;
+  return `${process.env.FRONT_END_HOSTNAME}/courses/${invitation.courseId}/join?invitationId=${invitation.id}`;
 }
 
 export default {
