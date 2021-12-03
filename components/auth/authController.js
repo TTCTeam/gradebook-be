@@ -107,6 +107,8 @@ export const signin = async (req, res, next) => {
   res.status(200).send({
     email: user.email,
     username: user.username,
+    firstname: user.firstname,
+    lastname: user.lastname,
     id: user.id,
     token: token,
     expiresIn: EXPIRY

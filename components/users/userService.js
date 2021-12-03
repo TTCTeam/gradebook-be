@@ -24,7 +24,14 @@ export async function createUser(newUser) {
     password: newUser.password,
     firstname:newUser.firstname,
     lastname: newUser.lastname,
-    googleId: newUser.googleId,
-
   });
+}
+
+export async function updateUser(newUser){
+  return await User.update({
+    username: newUser.username,
+    email: newUser.email,
+    firstname:newUser.firstname,
+    lastname: newUser.lastname,
+  },{where: {id: newUser.userId}})
 }

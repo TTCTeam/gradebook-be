@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import courseRouter from "./components/course/router.js";
 import authRouter from "./components/auth/router.js";
 import initializePassport from "./components/passport/index.js";
+import userRouter from "./components/users/router.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use("/", cors());
 
 app.use("/courses", courseRouter);
 app.use('/auth', authRouter);
+app.use('/user', userRouter);
 
 app.get("/", (req, res) => {
   res.send("SUCCESS");
