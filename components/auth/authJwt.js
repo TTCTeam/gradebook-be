@@ -1,6 +1,6 @@
-import jsonwebtoken, { decode } from 'jsonwebtoken';
+import jsonwebtoken from 'jsonwebtoken';
 const { TokenExpiredError } = jsonwebtoken;
-import { serect } from "./auth.config.js";
+import { secret } from "./auth.config.js";
 import { OAuth2Client } from 'google-auth-library';
 
 const catchError = (err, res) => {
@@ -25,7 +25,7 @@ export const verifyToken = async (req, res, next) => {
   }
   console.log(token);
 
-  jsonwebtoken.verify(token, serect,{ algorithms: 'HS256' }, (err, decoded) => {
+  jsonwebtoken.verify(token, secret,{ algorithms: 'HS256' }, (err, decoded) => {
 
     if (err) {
       return catchError(err, res);

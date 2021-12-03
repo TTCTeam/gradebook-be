@@ -1,4 +1,3 @@
-
-export const serect = "bezkoder-secret-key";
+export const secret = "bezkoder-secret-key";
 export const SALT = 5;
-export const EXPIRY = 1000;
+export const EXPIRY = 86400;

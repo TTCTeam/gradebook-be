@@ -1,7 +1,7 @@
 import pkg from 'bcryptjs';
-const { compareSync, hashSync } = pkg;
+const { hashSync } = pkg;
 import jsonwebtoken from 'jsonwebtoken';
-import { EXPIRY, SALT, serect } from "./auth.config.js";
+import { EXPIRY, SALT, secret } from "./auth.config.js";
 import { findUserByEmail, findUserByUsername } from '../users/userService.js';
 import { checkDuplicateEmail, checkDuplicateUsername, createNewUser } from "./authService.js";
 
@@ -78,7 +78,7 @@ export const signup = async (req, res, next) => {
 
 }
 
-export const signin = async (req, res, next) => {
+export const signin = async (req, res) => {
 
   const { username, email } = req.body;
   console.log(req.body);
@@ -100,7 +100,7 @@ export const signin = async (req, res, next) => {
     });
   }
 
-  const token = jsonwebtoken.sign({ id: user.id }, serect,{ algorithm: 'HS256',
+  const token = jsonwebtoken.sign({ id: user.id }, secret,{ algorithm: 'HS256',
     expiresIn: EXPIRY //10s
   });
 
