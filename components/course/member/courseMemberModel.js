@@ -6,6 +6,11 @@ import db from "../../../db/db.js";
 const CourseMember = db.define(
   'CourseMember',
   {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
     role: Sequelize.INTEGER
   },
   {

@@ -23,7 +23,7 @@ app.use("/", cors());
 
 app.use('/courses', verifyToken, courseRouter);
 app.use('/auth', authRouter);
-app.use('/user', userRouter);
+app.use('/user',verifyToken, userRouter);
 
 app.get("/", (req, res) => {
   res.send("SUCCESS");
