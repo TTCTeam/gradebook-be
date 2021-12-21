@@ -1,4 +1,6 @@
+import Course from '../courseModel.js';
 import courseService from '../courseService.js';
+import CourseMember from '../member/courseMemberModel.js';
 import Assignment from './assignmentModel.js';
 
 async function getAllAssignments(courseId) {
@@ -13,7 +15,17 @@ async function getAllAssignments(courseId) {
 }
 
 async function createAssignment(courseId, assignment) {
-  return await Assignment.create({ ...assignment, courseId });
+  const newAssignment = await Assignment.create({ ...assignment, courseId })
+
+  const courseMembers = await CourseMember.findAll({ where: { courseId } });
+
+  newAssignment.setStudents(courseMembers, {
+    through: {
+      point: null
+    }
+  })
+  return newAssignment;
+
 }
 
 async function updateOrder(assignments) {

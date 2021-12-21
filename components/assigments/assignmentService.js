@@ -57,17 +57,6 @@ async function uploadStudentListWithStudentIdAndFullname(courseId, studentList) 
         },
         assignments
       )
-      /* upsertModel(
-        CourseMember,
-        {
-          studentId: student.studentId,
-          fullname: student.fullname,
-          role: MemberRoles.STUDENT,
-          courseId
-        }, {
-        courseId,
-        studentId: student.studentId
-      }) */
     });
   }
 }
