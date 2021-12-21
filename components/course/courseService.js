@@ -38,7 +38,7 @@ async function getLecturers(courseId) {
     through: { where: { role: { [Op.or]: [MemberRoles.LECTURER, MemberRoles.OWNER] } } },
     attributes: ['id', 'firstname', 'lastname', 'email'],
   });
-  console.log(lecturers);
+
   return lecturers.map(lecturer => ({
     id: lecturer.id,
     firstname: lecturer.firstname,
@@ -56,7 +56,7 @@ async function getStudents(courseId) {
         ['id', 'firstname', 'lastname', 'email'],
     }
   );
-  console.log(students);
+
   return students.map(student => ({
     id: student.id,
     firstname: student.firstname,
@@ -70,7 +70,7 @@ async function addCourse(course, userId) {
   try {
     const addedCourse = await Course.create(course);
     const model = await CourseMember.create({ courseId: addedCourse.id, userId, role: MemberRoles.OWNER });
-    console.log(model);
+
     return addedCourse;
   } catch (e) {
     console.log(e);
@@ -80,7 +80,7 @@ async function addCourse(course, userId) {
 async function createInvitation(courseId, role = MemberRoles.STUDENT, isDisposable = false) {
   const course = await Course.findByPk(courseId);
   if (!course) {
-    console.log(course);
+
     throw new Error('The course id is invalid.');
   }
 
@@ -94,7 +94,7 @@ async function createInvitation(courseId, role = MemberRoles.STUDENT, isDisposab
       courseId
     },
   );
-  console.log(invitation);
+
   return {
     invitationLink: makeInvitationLink(invitation),
     expiredDate: invitation.expiredDate

@@ -11,7 +11,9 @@ const CourseMember = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    role: Sequelize.INTEGER
+    role: Sequelize.INTEGER,
+    studentId:Sequelize.INTEGER,
+    fullname: Sequelize.STRING
   },
   {
     timestamps: false,
@@ -21,5 +23,11 @@ const CourseMember = db.define(
 
 User.belongsToMany(Course, { through: CourseMember, as: 'courses', foreignKey: 'userId' });
 Course.belongsToMany(User, { through: CourseMember, as: 'members', foreignKey: 'courseId' });
+
+CourseMember.belongsTo(Course);
+Course.hasMany(CourseMember,{as:'students'});
+
+CourseMember.belongsTo(User);
+User.hasMany(CourseMember);
 
 export default CourseMember;

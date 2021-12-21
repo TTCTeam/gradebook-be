@@ -11,7 +11,7 @@ const UserAssignment = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    point: Sequelize.INTEGER
+    point: Sequelize.INTEGER,
   },
   {
     timestamps: false,
@@ -19,7 +19,13 @@ const UserAssignment = db.define(
   }
 );
 
-/* Assignment.belongsToMany(CourseMember, { through: Assignment, as: 'students'});
-CourseMember.belongsToMany(Assignment, { through: UserAssignment, as:'submissions'}); */
+Assignment.belongsToMany(CourseMember, { through: UserAssignment, as: 'students'});
+CourseMember.belongsToMany(Assignment, { through: UserAssignment, as:'assignments'});
+
+UserAssignment.belongsTo(Assignment)
+Assignment.hasMany(UserAssignment,{as:'submissions'});
+
+UserAssignment.belongsTo(CourseMember);
+CourseMember.hasMany(UserAssignment,{as:'submissions'});
 
 export default UserAssignment;

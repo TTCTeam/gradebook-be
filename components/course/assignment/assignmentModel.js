@@ -13,6 +13,7 @@ const Assignment = db.define(
     name: Sequelize.STRING,
     point: Sequelize.INTEGER,
     order: Sequelize.INTEGER,
+    status: Sequelize.INTEGER,
   },
   {
     timestamps: false,

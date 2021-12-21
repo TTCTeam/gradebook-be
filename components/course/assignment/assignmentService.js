@@ -3,10 +3,7 @@ import Assignment from './assignmentModel.js';
 
 async function getAllAssignments(courseId) {
   const course = await courseService.getCourseById(courseId);
-  console.log(course,'course getAllAssignments');
   const assignments = await course.getAssignments();
- 
-  console.log(assignments,'assignments getAllAssignments');
   return assignments.map(assignment => ({
     id: assignment.id,
     name: assignment.name,
