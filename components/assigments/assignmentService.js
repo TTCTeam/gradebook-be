@@ -2,8 +2,8 @@ import pkg from 'sequelize';
 import { MemberRoles } from "../../contrains/course.js";
 import Assignment from "../course/assignment/assignmentModel.js";
 import Course from "../course/courseModel.js";
+import courseService from '../course/courseService.js';
 import CourseMember from "../course/member/courseMemberModel.js";
-import { getUserAssignmentListInAssignmentId } from './assignmentController.js';
 
 const { Op } = pkg;
 
@@ -18,10 +18,46 @@ const upsertModel = async (Model, newRecord, condition) => {
   )
 }
 
+const upsertCourseMemberAndUserAssignmentl = async (newRecord, condition, assignments) => {
+  CourseMember.findOne({ where: condition }).then(
+    function (record) {
+      if (record) {
+        return record.update(newRecord);
+      }
+      else {
+        Model.create(newRecord).then(
+          function (newMem) {
+            newMem.setAssignments(assignments,
+              { 
+                through: { point: 0 } 
+              }
+            );
+          }
+        );
+      }
+    }
+  )
+}
+
 async function uploadStudentListWithStudentIdAndFullname(courseId, studentList) {
   if (studentList && courseId) {
+    const course = await courseService.getCourseById(courseId);
+    const assignments = await course.getAssignments();
     await studentList.forEach(student => {
-      upsertModel(
+      upsertCourseMemberAndUserAssignmentl(
+        {
+          studentId: student.studentId,
+          fullname: student.fullname,
+          role: MemberRoles.STUDENT,
+          courseId
+        },
+        {
+          courseId,
+          studentId: student.studentId
+        },
+        assignments
+      )
+      /* upsertModel(
         CourseMember,
         {
           studentId: student.studentId,
@@ -31,7 +67,7 @@ async function uploadStudentListWithStudentIdAndFullname(courseId, studentList) 
         }, {
         courseId,
         studentId: student.studentId
-      })
+      }) */
     });
   }
 }
@@ -90,9 +126,9 @@ async function getCourseGradeBoard(courseId) {
 
 async function uploadAssignmentListbyAssignmentField(assignmentId, studentList) {
   if (assignmentId && studentList) {
-   
+
     const assignment = await Assignment.findOne({ where: { id: assignmentId } });
-    
+
     await studentList.forEach(student => {
       CourseMember.findOne({ where: { studentId: student.studentId, courseId: assignment.courseId } }).then(
         function (member) {
