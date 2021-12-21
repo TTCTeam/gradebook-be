@@ -25,11 +25,11 @@ const upsertCourseMemberAndUserAssignmentl = async (newRecord, condition, assign
         return record.update(newRecord);
       }
       else {
-        Model.create(newRecord).then(
+        CourseMember.create(newRecord).then(
           function (newMem) {
             newMem.setAssignments(assignments,
               { 
-                through: { point: 0 } 
+                through: { point: null } 
               }
             );
           }
