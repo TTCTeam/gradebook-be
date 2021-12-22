@@ -1,5 +1,12 @@
 import express from "express"
-import { getAssignmentBoard, getStudentList, getUserAssignmentListInAssignmentId, uploadAssignmentsListByAssignmentId, uploadStudentList } from "./assignmentController.js";
+import {
+  getAssignmentBoard,
+  getStudentList,
+  getUserAssignmentListInAssignmentId,
+  publicAssignment,
+  uploadAssignmentsListByAssignmentId,
+  uploadStudentList
+} from "./assignmentController.js";
 const assigmentsRouter = express.Router();
 
 assigmentsRouter.get('/',(req,res)=>{res.send({message:"lalala"})});
