@@ -56,11 +56,8 @@ export const uploadAssignmentsListByAssignmentId = async (req, res) => {
 
   const { assignmentId } = req.params;
   const studentList = req.body;
-  /* 
-  studenList =[
-    {studentId:"",point:0},
-  ] */
-  const filteredStudentList = studentList.filter(student => student.studentId !== '' && student.point !== '');
+
+  const filteredStudentList = studentList.filter(student => student.studentId && student.point);
   try {
 
     await assignmentService.uploadAssignmentListbyAssignmentField(assignmentId, filteredStudentList);

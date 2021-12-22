@@ -4,6 +4,7 @@ import Assignment from '../course/assignment/assignmentModel.js';
 import Course from '../course/courseModel.js';
 import courseService from '../course/courseService.js';
 import CourseMember from '../course/member/courseMemberModel.js';
+import UserAssignment from '../users/assignment/userAssignmentModel.js';
 
 const { Op } = pkg;
 
@@ -110,7 +111,7 @@ async function getCourseGradeBoard(courseId) {
   return membersResult;
 }
 
-async function uploadAssignmentListbyAssignmentField(
+async function uploadAssignmentListByAssignmentField(
   assignmentId,
   studentList
 ) {
@@ -119,18 +120,20 @@ async function uploadAssignmentListbyAssignmentField(
       where: { id: assignmentId },
     });
 
-    await studentList.forEach((student) => {
-      CourseMember.findOne({
+    for (const student of studentList) {
+      const member = await CourseMember.findOne({
         where: { studentId: student.studentId, courseId: assignment.courseId },
-      }).then(function (member) {
-        if (member) {
-          //we need to check existed and update UserAssignment record here before add new record
-          member.addSubmission(assignment, {
-            through: { point: student.point },
-          });
-        }
       });
-    });
+      if (member) {
+        const userAssignment = await UserAssignment.findOne({
+          where: {
+            assignmentId: assignment.id,
+            courseMemberId: member.id
+          }
+        });
+        userAssignment.update({ point: student.point });
+      }
+    }
   }
 }
 
@@ -139,5 +142,5 @@ export default {
   getAllUserAssginment,
   getAssignmentsByAssignmentId,
   getCourseGradeBoard,
-  uploadAssignmentListbyAssignmentField,
+  uploadAssignmentListbyAssignmentField: uploadAssignmentListByAssignmentField,
 };

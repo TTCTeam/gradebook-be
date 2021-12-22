@@ -19,13 +19,13 @@ const UserAssignment = db.define(
   }
 );
 
-Assignment.belongsToMany(CourseMember, { through: UserAssignment, as: 'students'});
-CourseMember.belongsToMany(Assignment, { through: UserAssignment, as:'assignments'});
+Assignment.belongsToMany(CourseMember, { through: UserAssignment, as: 'students' });
+CourseMember.belongsToMany(Assignment, { through: UserAssignment, as: 'assignments' });
 
-UserAssignment.belongsTo(Assignment)
-Assignment.hasMany(UserAssignment,{as:'submissions', foreignKey:'assignmentId'});
+UserAssignment.belongsTo(Assignment);
+Assignment.hasMany(UserAssignment, { as: 'submissions', foreignKey: 'assignmentId' });
 
 UserAssignment.belongsTo(CourseMember);
-CourseMember.hasMany(UserAssignment,{as:'submissions'});
+CourseMember.hasMany(UserAssignment, { as: 'submissions', foreignKey: 'courseMemberId' });
 
 export default UserAssignment;
