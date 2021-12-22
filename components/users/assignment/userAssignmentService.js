@@ -1,3 +1,4 @@
+import { AssignmentStatus } from "../../../contrains/assignment.js";
 import Course from "../../course/courseModel.js";
 import CourseMember from "../../course/member/courseMemberModel.js"
 import User from "../userModel.js";
@@ -14,7 +15,11 @@ async function getAllAssignmentsOfUser(userId, courseId) {
   })
   console.log(courseMember);
   if (courseMember) {
-    const assignments = await courseMember.getSubmissions();
+    const assignments = await courseMember.getAssignments({
+      where:{
+        status: AssignmentStatus.PUBLIC
+      }
+    });
     console.log(assignments,'user assignment');
     if (assignments) {
       return assignments;
