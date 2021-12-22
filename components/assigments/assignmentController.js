@@ -70,3 +70,7 @@ export const uploadAssignmentsListByAssignmentId = async (req, res) => {
     res.status(500).send({ message: "Failed to upload student list" })
   }
 }
+
+export const testController = async (req, res) => {
+  res.status(200).send({});
+}

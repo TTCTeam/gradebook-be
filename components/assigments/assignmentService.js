@@ -4,6 +4,7 @@ import Assignment from "../course/assignment/assignmentModel.js";
 import Course from "../course/courseModel.js";
 import courseService from '../course/courseService.js';
 import CourseMember from "../course/member/courseMemberModel.js";
+import UserAssignment from '../users/assignment/userAssignmentModel.js';
 
 const { Op } = pkg;
 
@@ -119,10 +120,12 @@ async function uploadAssignmentListbyAssignmentField(assignmentId, studentList) 
     const assignment = await Assignment.findOne({ where: { id: assignmentId } });
 
     await studentList.forEach(student => {
+      
       CourseMember.findOne({ where: { studentId: student.studentId, courseId: assignment.courseId } }).then(
         function (member) {
           if (member) {
             //we need to check existed and update UserAssignment record here before add new record
+            // const userAssignment = await UserAssignment.findOne({where:{assignmentId,}})
             member.addSubmission(assignment,
               {
                 through: { point: student.point }

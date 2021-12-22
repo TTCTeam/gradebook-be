@@ -5,5 +5,5 @@ import { checkExistedStdudentId, getUserProfile, updateProfile } from "./userCon
 const userRouter = express.Router();
 userRouter.get('/',getUserProfile);
 userRouter.put('/', checkExistedStdudentId,updateProfile);
-userRouter.get('/:courseId/assignments',getAllAssignmentByUser)
+userRouter.get('/:courseId/assignments',getAllAssignmentByUser);
 export default userRouter;
