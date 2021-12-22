@@ -7,8 +7,6 @@ import UserAssignment from "./userAssignmentModel.js";
 async function getAllAssignmentsOfUser(userId, courseId) {
   const user = await User.findOne({ where: { id: userId } });
   const studentId = user.username;
-  console.log(user.toJSON());
-  console.log(studentId, courseId);
 
   const courseMember = await CourseMember.findOne({
     where:{
@@ -29,9 +27,9 @@ async function getAllAssignmentsOfUser(userId, courseId) {
         },
         attributes:['id','point','assignmentId']
       });
-      assignmentsResult.push(userAssignment);
+      assignmentsResult.push(userAssignment[0]);
     }
-    console.log(assignments,'user assignment');
+
     if (assignmentsResult) {
       return assignmentsResult;
     }
