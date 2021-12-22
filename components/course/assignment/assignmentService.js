@@ -6,39 +6,46 @@ import Assignment from './assignmentModel.js';
 async function getAllAssignments(courseId) {
   const course = await courseService.getCourseById(courseId);
   const assignments = await course.getAssignments();
-  return assignments.map(assignment => ({
+  return assignments.map((assignment) => ({
     id: assignment.id,
     name: assignment.name,
     point: assignment.point,
     order: assignment.order,
+    status: assignment.status,
   }));
 }
 
 async function createAssignment(courseId, assignment) {
-  const newAssignment = await Assignment.create({ ...assignment, courseId })
+  const newAssignment = await Assignment.create({
+    ...assignment,
+    courseId,
+    status: 0,
+  });
 
   const courseMembers = await CourseMember.findAll({ where: { courseId } });
 
   newAssignment.setStudents(courseMembers, {
     through: {
-      point: null
-    }
-  })
+      point: null,
+    },
+  });
   return newAssignment;
-
 }
 
 async function updateOrder(assignments) {
   assignments.forEach((assignment) => {
-    Assignment.update({ order: assignment.order }, {
-      where: { id: assignment.id }
-    });
+    Assignment.update(
+      { order: assignment.order },
+      {
+        where: { id: assignment.id },
+      }
+    );
   });
 }
 
 async function editAssignment(assignmentId, assignment) {
   return await Assignment.update(assignment, {
-    where: { id: assignmentId }
+    where: { id: assignmentId },
   });
 }
 
@@ -51,5 +58,5 @@ export default {
   createAssignment,
   editAssignment,
   deleteAssignment,
-  updateOrder
+  updateOrder,
 };
