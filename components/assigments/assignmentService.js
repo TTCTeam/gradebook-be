@@ -5,6 +5,7 @@ import Course from '../course/courseModel.js';
 import courseService from '../course/courseService.js';
 import CourseMember from '../course/member/courseMemberModel.js';
 import UserAssignment from '../users/assignment/userAssignmentModel.js';
+import { AssignmentStatus } from '../../contrains/assignment.js';
 
 const { Op } = pkg;
 
@@ -137,10 +138,21 @@ async function uploadAssignmentListByAssignmentField(
   }
 }
 
+async function publicAssignment(assignmentId) {
+  const assignment = await Assignment.findOne({
+    where: { id: assignmentId },
+  });
+  if (!assignment) {
+    throw Error('Assignment id does not exist.');
+  }
+  assignment.update({ status: AssignmentStatus.PUBLIC });
+}
+
 export default {
   uploadStudentListWithStudentIdAndFullname,
   getAllUserAssginment,
   getAssignmentsByAssignmentId,
   getCourseGradeBoard,
   uploadAssignmentListbyAssignmentField: uploadAssignmentListByAssignmentField,
+  publicAssignment,
 };

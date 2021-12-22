@@ -64,6 +64,17 @@ export const uploadAssignmentsListByAssignmentId = async (req, res) => {
 
     res.status(200).send({ message: "Upload successfully!" });
   } catch (err) {
-    res.status(500).send({ message: "Failed to upload student list" })
+    res.status(500).send({ message: "Failed to upload student list" });
+  }
+}
+
+export const publicAssignment = async (req, res) => {
+  const { assignmentId } = req.params;
+  try {
+    await assignmentService.publicAssignment(assignmentId);
+    res.status(200).send({ message: "Public successfully!" });
+  }
+  catch (e) {
+    res.status(400).send(e.message);
   }
 }
