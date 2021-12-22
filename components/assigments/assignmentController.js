@@ -56,18 +56,26 @@ export const uploadAssignmentsListByAssignmentId = async (req, res) => {
 
   const { assignmentId } = req.params;
   const studentList = req.body;
-  /* 
-  studenList =[
-    {studentId:"",point:0},
-  ] */
-  const filteredStudentList = studentList.filter(student => student.studentId !== '' && student.point !== '');
+
+  const filteredStudentList = studentList.filter(student => student.studentId && student.point);
   try {
 
     await assignmentService.uploadAssignmentListbyAssignmentField(assignmentId, filteredStudentList);
 
     res.status(200).send({ message: "Upload successfully!" });
   } catch (err) {
-    res.status(500).send({ message: "Failed to upload student list" })
+    res.status(500).send({ message: "Failed to upload student list" });
+  }
+}
+
+export const publicAssignment = async (req, res) => {
+  const { assignmentId } = req.params;
+  try {
+    await assignmentService.publicAssignment(assignmentId);
+    res.status(200).send({ message: "Public successfully!" });
+  }
+  catch (e) {
+    res.status(400).send(e.message);
   }
 }
 
