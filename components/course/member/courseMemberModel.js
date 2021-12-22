@@ -28,6 +28,6 @@ CourseMember.belongsTo(Course);
 Course.hasMany(CourseMember,{as:'students'});
 
 CourseMember.belongsTo(User);
-User.hasMany(CourseMember);
+User.hasMany(CourseMember,{as:'members'});
 
 export default CourseMember;
