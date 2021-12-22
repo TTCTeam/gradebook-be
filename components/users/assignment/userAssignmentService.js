@@ -1,14 +1,14 @@
+import CourseMember from "../../course/member/courseMemberModel.js"
+import User from "../userModel.js";
 import UserAssignment from "./userAssignmentModel.js";
 
 async function getAllAssignmentsOfUser(userId, courseId) {
-  const assignments = await UserAssignment.findAll({ where: { userId, courseId } });
-  if (assignments) {
-    return assignments.map(assignment => ({
-        id: assignment.id,
-        point: assignment.point,
-      })
-    );
+  const user = await User.findOne({ where: { id: userId } });
+  const courseMember = await CourseMember.findOne({ where: { studenntId:user.username, courseId} });
+  if(courseMember){
+    return await courseMember.getSubmissions();
   }
+  return [];
 }
 
 async function updateUserAssignmentPoint(userAssignmentId, point) {

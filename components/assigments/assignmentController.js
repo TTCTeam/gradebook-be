@@ -78,3 +78,7 @@ export const publicAssignment = async (req, res) => {
     res.status(400).send(e.message);
   }
 }
+
+export const testController = async (req, res) => {
+  res.status(200).send({});
+}

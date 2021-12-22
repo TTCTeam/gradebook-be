@@ -1,3 +1,5 @@
+import { AssignmentStatus } from '../../../contrains/assignment.js';
+import { MemberRoles } from '../../../contrains/course.js';
 import Course from '../courseModel.js';
 import courseService from '../courseService.js';
 import CourseMember from '../member/courseMemberModel.js';
@@ -19,10 +21,10 @@ async function createAssignment(courseId, assignment) {
   const newAssignment = await Assignment.create({
     ...assignment,
     courseId,
-    status: 0,
+    status: AssignmentStatus.DRAFT
   });
 
-  const courseMembers = await CourseMember.findAll({ where: { courseId } });
+  const courseMembers = await CourseMember.findAll({ where: { courseId, role: MemberRoles.STUDENT } });
 
   newAssignment.setStudents(courseMembers, {
     through: {
