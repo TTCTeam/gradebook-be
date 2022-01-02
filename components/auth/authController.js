@@ -4,6 +4,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import { EXPIRY, SALT, secret } from "./auth.config.js";
 import { findUserByEmail, findUserByUsername } from '../users/userService.js';
 import { checkDuplicateEmail, checkDuplicateUsername, createNewUser } from "./authService.js";
+import USERSTATUS from '../../contrains/user.js';
 
 export const checkExistedEmailOrUsername = async (req, res, next) => {
   const { email, username } = req.body;
@@ -56,9 +57,8 @@ export const signup = async (req, res, next) => {
     password: hashPassword,
     firstname: firstname,
     lastname: lastname,
+    status: USERSTATUS.active
   }
-
-  console.log(user);
 
   try {
     const newUser = await createNewUser(user)
@@ -84,14 +84,14 @@ export const signin = async (req, res) => {
   console.log(req.body);
 
   let hasEmail, hasUsername;
-  if(!email){
+  if (!email) {
     hasEmail = await findUserByEmail(username);
     hasUsername = await findUserByUsername(username);
-  }else{
+  } else {
     hasEmail = await findUserByEmail(email);
     hasUsername = await findUserByUsername(email);
   }
-  
+
   const user = hasEmail || hasUsername;
 
   if (!user) {
@@ -100,7 +100,8 @@ export const signin = async (req, res) => {
     });
   }
 
-  const token = jsonwebtoken.sign({ id: user.id }, secret,{ algorithm: 'HS256',
+  const token = jsonwebtoken.sign({ id: user.id }, secret, {
+    algorithm: 'HS256',
     expiresIn: EXPIRY //10s
   });
 
@@ -118,10 +119,17 @@ export const signin = async (req, res) => {
 export const checkExistedAndRegistAccount = async (req, res, next) => {
   const { email, username, firstname, lastname, password } = req.body;
 
-  const isExistAccount = await checkDuplicateEmail(email);
+  const ExistedAccount = await checkDuplicateEmail(email);
 
-  if (isExistAccount) {
-    return next();
+  if (ExistedAccount) {
+    if(ExistedAccount.status!==USERSTATUS.banned){
+      return next();
+    }else{
+      return res.status(401).send({
+        message: "Your account has been banned. Please contact admin to active."
+      })
+    }
+    
   } else {
     const user = {
       username: username,
@@ -129,6 +137,7 @@ export const checkExistedAndRegistAccount = async (req, res, next) => {
       password: password,
       firstname: firstname,
       lastname: lastname,
+      status: USERSTATUS.active
     }
     try {
       const newUser = await createNewUser(user)

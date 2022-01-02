@@ -25,6 +25,7 @@ export async function createUser(newUser) {
     password: newUser.password,
     firstname: newUser.firstname,
     lastname: newUser.lastname,
+    status: newUser.status
   });
 }
 
@@ -36,22 +37,3 @@ export async function updateUser(newUser) {
     lastname: newUser.lastname,
   }, { where: { id: newUser.userId } })
 }
-
-/* export async function mapStudentToTheirAssignment(oldStudentId, newStudentId, userId) {
-  await CourseMember.findOne({
-    where: { studentId: oldStudentId }
-  }).then(
-    function (oldMember) {
-      oldMember.update({ userId: null });
-    }
-  );
-
-  await CourseMember.findOne({
-    where: { studentId: newStudentId }
-  }).then(
-    function (newMember) {
-      newMember.update({ userId: userId });
-    }
-  )
-
-} */

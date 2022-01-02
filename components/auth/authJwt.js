@@ -48,7 +48,7 @@ export const verifyGoogleToken = async (req, res, next) => {
     });
 
     const user = ticket.getPayload();
-    console.log(user);
+    // console.log(user);
 
     req.body = {
       email: user.email,

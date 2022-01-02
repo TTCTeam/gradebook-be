@@ -11,7 +11,7 @@ export const getCourseById = async (req, res) => {
   const userId = req.userId;
   const course = await courseService.getCourseById(courseId);
   const role = await courseService.getRoleInCourse(courseId, userId);
-  if (!course || !role){
+  if (!course || !role) {
     res.status(400).json('The course id is invalid.');
     return;
   }
@@ -33,7 +33,11 @@ export const getStudents = async (req, res) => {
 export const createCourse = async (req, res) => {
   const course = req.body;
   const userId = req.userId;
-  const addedCourse = await courseService.addCourse(course, userId);
+  const addedCourse = await courseService.addCourse({
+    name: course.name,
+    description: course.description,
+    lecture: userId
+  }, userId);
   res.status(201).json(addedCourse);
 };
 
@@ -61,7 +65,7 @@ export const joinCourse = async (req, res) => {
 
 export const sendInvitationMail = async (req, res) => {
   const { courseId } = req.params;
-  const {emails, role} = req.body;
+  const { emails, role } = req.body;
   const successfulList = await courseService.sendInvitationMail(courseId, emails, role);
   res.status(200).json(successfulList);
 };
