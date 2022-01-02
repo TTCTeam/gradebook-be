@@ -21,13 +21,16 @@ const User = db.define(
     lastname: {
       type: Sequelize.STRING,
     },
-    password:{
-      type:Sequelize.STRING,
+    password: {
+      type: Sequelize.STRING,
 
+    },
+    status: {
+      type: Sequelize.INTEGER
     }
   },
   {
-    timestamps: false,
+    timestamps: true,
     underscored: true
   }
 );

@@ -3,7 +3,7 @@ const { compareSync } = pkg;
 import { createUser, findUserByEmail, findUserByUsername } from "../users/userService.js"
 
 export async function checkDuplicateUsername(username) {
-  if(username){
+  if (username) {
     const user = await findUserByUsername(username);
     if (user) {
       return true;
@@ -16,39 +16,38 @@ export async function checkDuplicateEmail(email) {
   if (email) {
     const user = await findUserByEmail(email);
     if (user) {
-      return true;
+      return user;
     }
   }
   return false;
 }
 
-export async function checkCredential(usernameOrEmail,password){
+export async function checkCredential(usernameOrEmail, password) {
 
-  if(!password) return false;
+  if (!password) return false;
   const hasEmail = await findUserByEmail(usernameOrEmail);
-  const hasUsername=await findUserByUsername(usernameOrEmail);
+  const hasUsername = await findUserByUsername(usernameOrEmail);
 
-  const user = hasEmail||hasUsername;
+  const user = hasEmail || hasUsername;
 
-  if(user){
+  if (user) {
     const passwordIsValid = compareSync(password, user.password);
-    
-    if(!passwordIsValid){
+
+    if (!passwordIsValid) {
       return false;
     }
-    console.log(user,'true');
     return user;
-    
+
   }
   return null;
 }
 
-export async function createNewUser(newUser){
-  try{
+export async function createNewUser(newUser) {
+  try {
     const userAdded = await createUser(newUser);
     return userAdded;
-  }catch(err){
-    throw new Error({message:err.message});
+  } catch (err) {
+    throw new Error({ message: err.message });
   }
 }
 

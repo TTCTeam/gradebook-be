@@ -1,8 +1,11 @@
 import express from "express";
-import { verifyToken } from "../auth/authJwt.js";
+import { getAllAssignmentByUser, updateUserAssignmentPoint } from "./assignment/userAssignmentController.js";
 import { checkExistedStdudentId, getUserProfile, updateProfile } from "./userController.js";
 
 const userRouter = express.Router();
-userRouter.get('/',verifyToken,getUserProfile);
-userRouter.put('/',verifyToken, checkExistedStdudentId,updateProfile);
+userRouter.get('/', getUserProfile);
+userRouter.put('/', checkExistedStdudentId, updateProfile);
+userRouter.get('/:courseId/assignments', getAllAssignmentByUser);
+userRouter.put('/:courseId/assignments/:userAssignmentId', updateUserAssignmentPoint);
+
 export default userRouter;

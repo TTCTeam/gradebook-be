@@ -1,20 +1,21 @@
+import CourseMember from "../course/member/courseMemberModel.js";
 import User from "../users/userModel.js";
 
-export async function findUserById(userId){
+export async function findUserById(userId) {
   return await User.findByPk(userId);
 }
 
 export async function findUserByEmail(email) {
-  if(email){
+  if (email) {
     return User.findOne({ where: { email: email } });
   }
 }
 
 export async function findUserByUsername(username) {
-  if(username){
+  if (username) {
     return User.findOne({ where: { username: username } });
   }
-  
+
 }
 
 export async function createUser(newUser) {
@@ -22,16 +23,17 @@ export async function createUser(newUser) {
     username: newUser.username,
     email: newUser.email,
     password: newUser.password,
-    firstname:newUser.firstname,
+    firstname: newUser.firstname,
     lastname: newUser.lastname,
+    status: newUser.status
   });
 }
 
-export async function updateUser(newUser){
+export async function updateUser(newUser) {
   return await User.update({
     username: newUser.username,
     email: newUser.email,
-    firstname:newUser.firstname,
+    firstname: newUser.firstname,
     lastname: newUser.lastname,
-  },{where: {id: newUser.userId}})
+  }, { where: { id: newUser.userId } })
 }

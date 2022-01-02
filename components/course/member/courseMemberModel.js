@@ -6,7 +6,14 @@ import db from "../../../db/db.js";
 const CourseMember = db.define(
   'CourseMember',
   {
-    role: Sequelize.INTEGER
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    role: Sequelize.INTEGER,
+    studentId:Sequelize.INTEGER,
+    fullname: Sequelize.STRING
   },
   {
     timestamps: false,
@@ -16,5 +23,11 @@ const CourseMember = db.define(
 
 User.belongsToMany(Course, { through: CourseMember, as: 'courses', foreignKey: 'userId' });
 Course.belongsToMany(User, { through: CourseMember, as: 'members', foreignKey: 'courseId' });
+
+CourseMember.belongsTo(Course);
+Course.hasMany(CourseMember,{as:'students'});
+
+CourseMember.belongsTo(User);
+User.hasMany(CourseMember,{as:'members'});
 
 export default CourseMember;

@@ -1,4 +1,4 @@
-import { findUserById, findUserByUsername, updateUser } from "./userService.js";
+import { findUserByEmail, findUserById, findUserByUsername, updateUser } from "./userService.js";
 
 export const getUserProfile = async (req, res, next) => {
   const { userId } = req;
@@ -18,17 +18,28 @@ export const getUserProfile = async (req, res, next) => {
 }
 
 export const updateProfile = async (req, res, next) => {
-  const { firstname, lastname, username, email } = req.body;
+  const { firstname, lastname, email } = req.body;
+  let { username } = req.body;
   const { userId } = req;
 
   try {
-    const updatedUser = await updateUser({
+    const user = await findUserByEmail(email);
+    if (user.username !== null && user.username !== username) {
+      username = user.username;
+    }
+    await updateUser({
       firstname,
       lastname,
       username,
       email,
       userId
     });
+
+
+    /* if(user.username !== username){
+      mapStudentToTheirAssignment(user.username,username,user.id);
+    }  */
+
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -36,22 +47,22 @@ export const updateProfile = async (req, res, next) => {
 
 }
 
-export const checkExistedStdudentId = async (req,res, next)=>{
-  const {userId}= req;
-  const {username} = req.body;
+export const checkExistedStdudentId = async (req, res, next) => {
+  const { userId } = req;
+  const { username } = req.body;
 
-  try{
+  try {
     const userFoundWithUsername = await findUserByUsername(username);
     const userFoundWithUserId = await findUserById(userId);
-    if(userFoundWithUsername&&userFoundWithUsername.id!==userFoundWithUserId.id){
+    if (userFoundWithUsername && userFoundWithUsername.id !== userFoundWithUserId.id) {
       return res.status(409).send({
-        message:"Your enterd username is already in use."
+        message: "Your enterd username is already in use."
       });
     }
     next();
-  }catch(err){
+  } catch (err) {
     return res.status(500).send({
-      message:err.message
+      message: err.message
     });
   }
 }
