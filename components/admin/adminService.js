@@ -10,8 +10,8 @@ async function getAllUsers() {
   return await User.findAll();
 }
 
-async function getAllAdmin() {
+async function getAllAdmins() {
   return await Admin.findAll();
 }
 
-export default { getAllUsers, getAllAdmins: getAllAdmin, getAllCourses };
+export default { getAllUsers, getAllAdmins, getAllCourses };
