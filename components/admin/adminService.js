@@ -32,12 +32,12 @@ async function createAdmin(admin) {
   return Admin.create(admin);
 }
 
-async function updateUserStatus(userId, status) {
-  return User.update({ status }, { where: { id: userId } });
+async function updateUserInfo(userId, userInfo) {
+  return User.update(userInfo, { where: { id: userId } });
 }
 
 export default {
   getAllUsers, getAllAdmins, getAllCourses,
   getUserById, getAdminById, getCourseById,
-  createAdmin, updateUserStatus
+  createAdmin, updateUserInfo
 };

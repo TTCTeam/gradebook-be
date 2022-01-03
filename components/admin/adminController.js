@@ -45,7 +45,7 @@ export const createAdmin = async (req, res) => {
 
 export const updateUserStatus = async (req, res)=>{
   const { userId } = req.params;
-  const { status } = req.body;
-  const affectedRows = await adminService.updateUserStatus(userId, status);
+  const userInfo = req.body;
+  const affectedRows = await adminService.updateUserInfo(userId, userInfo);
   res.status(200).send(affectedRows);
 }
