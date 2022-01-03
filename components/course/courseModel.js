@@ -14,7 +14,7 @@ const Course = db.define(
     description: Sequelize.STRING,
   },
   {
-    timestamps: false,
+    timestamps: true,
     underscored: true
   }
 );

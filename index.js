@@ -9,6 +9,7 @@ import initializePassport from "./components/passport/index.js";
 import userRouter from "./components/users/router.js";
 import { verifyToken } from './components/auth/authJwt.js';
 import assigmentsRouter from "./components/assigments/router.js";
+import adminRouter from './components/admin/router.js';
 
 dotenv.config();
 
@@ -24,8 +25,9 @@ app.use("/", cors());
 
 app.use('/courses', verifyToken, courseRouter);
 app.use('/auth', authRouter);
-app.use('/user',verifyToken, userRouter);
-app.use('/assignments',verifyToken,assigmentsRouter);
+app.use('/user', verifyToken, userRouter);
+app.use('/assignments', verifyToken, assigmentsRouter);
+app.use('/admin', adminRouter);
 
 app.get("/", (req, res) => {
   res.send("SUCCESS");
