@@ -11,6 +11,7 @@ export const getUserProfile = async (req, res, next) => {
       firstname: user.firstname,
       lastname: user.lastname,
       id: user.id,
+      status: user.status
     });
   } catch (err) {
     res.status(500).send({ message: err.message });

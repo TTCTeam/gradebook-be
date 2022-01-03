@@ -57,7 +57,7 @@ export const signup = async (req, res, next) => {
     password: hashPassword,
     firstname: firstname,
     lastname: lastname,
-    status: USERSTATUS.active
+    status: USERSTATUS.pending
   }
 
   try {
@@ -112,7 +112,8 @@ export const signin = async (req, res) => {
     lastname: user.lastname,
     id: user.id,
     token: token,
-    expiresIn: EXPIRY
+    expiresIn: EXPIRY,
+    status: user.status
   });
 }
 
@@ -137,7 +138,7 @@ export const checkExistedAndRegistAccount = async (req, res, next) => {
       password: password,
       firstname: firstname,
       lastname: lastname,
-      status: USERSTATUS.active
+      status: USERSTATUS.pending
     }
     try {
       const newUser = await createNewUser(user)
