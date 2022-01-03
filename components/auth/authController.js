@@ -5,6 +5,7 @@ import { EXPIRY, SALT, secret } from "./auth.config.js";
 import { findUserByEmail, findUserByUsername } from '../users/userService.js';
 import { checkDuplicateEmail, checkDuplicateUsername, createNewUser } from "./authService.js";
 import USERSTATUS from '../../contrains/user.js';
+import activateService from '../activation/activateService.js';
 
 export const checkExistedEmailOrUsername = async (req, res, next) => {
   const { email, username } = req.body;
@@ -61,7 +62,8 @@ export const signup = async (req, res, next) => {
   }
 
   try {
-    const newUser = await createNewUser(user)
+    const newUser = await createNewUser(user);
+    await activateService.sendActivationMail(newUser.id);
     req.body = {
       username: newUser.username,
       email: newUser.email,
@@ -106,14 +108,9 @@ export const signin = async (req, res) => {
   });
 
   res.status(200).send({
-    email: user.email,
-    username: user.username,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    id: user.id,
+    ...user,
     token: token,
     expiresIn: EXPIRY,
-    status: user.status
   });
 }
 
@@ -142,6 +139,7 @@ export const checkExistedAndRegistAccount = async (req, res, next) => {
     }
     try {
       const newUser = await createNewUser(user)
+      await activateService.sendActivationMail(newUser.id);
       req.body = {
         username: newUser.username,
         email: newUser.email,
@@ -149,6 +147,7 @@ export const checkExistedAndRegistAccount = async (req, res, next) => {
         firstname: newUser.firstname,
         lastname: newUser.lastname
       }
+
       return next();
 
     } catch (err) {

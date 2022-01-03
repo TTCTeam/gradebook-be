@@ -38,14 +38,35 @@ export const createAdmin = async (req, res) => {
   try {
     const addedAdmin = await adminService.createAdmin(admin);
     res.status(201).json(addedAdmin);
-  } catch (e){
+  } catch (e) {
     res.status(500).send(e.message);
   }
 }
 
-export const updateUserStatus = async (req, res)=>{
+export const updateUserStatus = async (req, res) => {
   const { userId } = req.params;
   const userInfo = req.body;
   const affectedRows = await adminService.updateUserInfo(userId, userInfo);
   res.status(200).send(affectedRows);
+}
+
+export const adminSignin = async (req, res) => {
+  const { username } = req.body;
+  const admin = await adminService.findAdminByUsername(username);
+  if (!admin) {
+    res.status(400).send({
+      message: "Failed! Your account coudn't be found in database."
+    });
+  }
+
+  const token = jsonwebtoken.sign({ id: user.id }, secret, {
+    algorithm: 'HS256',
+    expiresIn: EXPIRY //10s
+  });
+
+  res.status(200).send({
+    ...admin,
+    token: token,
+    expiresIn: EXPIRY,
+  });
 }

@@ -1,10 +1,10 @@
 import LocalStrategy from 'passport-local/lib/strategy.js';
 import USERSTATUS from '../../contrains/user.js';
-import { checkCredential } from '../auth/authService.js';
+import { checkAdminCredential, checkCredential } from '../auth/authService.js';
 
 function initializePassport(app, passport) {
 
-  passport.use(new LocalStrategy({ session: false },
+  passport.use('user-local',new LocalStrategy({ session: false },
     async function (username, password, done) {
 
       const user = await checkCredential(username, password);
@@ -14,6 +14,18 @@ function initializePassport(app, passport) {
         if(user.status===USERSTATUS.banned){
           done(null, false, "Your account has been banned. Please contact admin to active.");
         }
+        return done(null, user);
+      }
+    }
+  ));
+
+  passport.use('admin-local',new LocalStrategy({ session: false },
+    async function (username, password, done) {
+
+      const user = await checkAdminCredential(username, password);
+      if (!user) {
+        return done(null, false, "Invalid username and passsword.");
+      } else {
         return done(null, user);
       }
     }
