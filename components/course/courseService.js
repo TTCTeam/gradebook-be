@@ -1,5 +1,5 @@
 import pkg from 'sequelize';
-import { INVITATION_EXPIRED_DAYS } from '../../contrains/invitation.js';
+import { INVITATION_EXPIRED_DAYS, INVITATION_MAIL_SUBJECT } from '../../contrains/invitation.js';
 import { addDays } from '../../utils/dateUtils.js';
 import invitationMailTemplate from '../../contrains/invitationMailTemplate.js';
 import { sendMail } from '../mail-sender/mailSenderService.js';
@@ -124,7 +124,7 @@ async function sendInvitationMail(courseId, emails, role) {
   const invitation = await createInvitation(courseId, role, false);
   const course = await Course.findByPk(courseId);
   const htmlContent = invitationMailTemplate(course.name, role, invitation);
-  return await sendMail(emails, htmlContent);
+  return await sendMail(emails, htmlContent,INVITATION_MAIL_SUBJECT);
 }
 
 function makeInvitationLink(invitation) {

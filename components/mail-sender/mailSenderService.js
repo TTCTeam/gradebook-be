@@ -14,11 +14,11 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export async function sendMail(emails, htmlContent) {
+export async function sendMail(emails, htmlContent, subject) {
   const options = {
     from: 'TTC Team',
     to: emails,
-    subject: 'Invitation to classroom',
+    subject: subject,
     html: htmlContent
   };
 

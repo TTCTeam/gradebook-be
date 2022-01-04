@@ -7,23 +7,23 @@ async function getAllCourses() {
 }
 
 async function getAllUsers() {
-  return await User.findAll();
+  return User.findAll();
 }
 
 async function getAllAdmins() {
-  return await Admin.findAll();
+  return Admin.findAll();
 }
 
 async function getUserById(userId) {
-  return await User.findByPk(userId);
+  return User.findByPk(userId);
 }
 
 async function getAdminById(adminId) {
-  return await Admin.findByPk(adminId);
+  return Admin.findByPk(adminId);
 }
 
 async function getCourseById(courseId) {
-  return await Course.findByPk(courseId, {
+  return Course.findByPk(courseId, {
     include: { model: User, as: 'members', through: { attributes: ['role'] } }
   });
 }
@@ -36,8 +36,12 @@ async function updateUserInfo(userId, userInfo) {
   return User.update(userInfo, { where: { id: userId } });
 }
 
+async function findAdminByUsername(username) {
+  return Admin.findOne({ where: { username } });
+}
+
 export default {
   getAllUsers, getAllAdmins, getAllCourses,
   getUserById, getAdminById, getCourseById,
-  createAdmin, updateUserInfo
+  createAdmin, updateUserInfo, findAdminByUsername
 };

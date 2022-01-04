@@ -1,5 +1,7 @@
 import express from 'express';
+import passport from 'passport';
 import {
+  adminSignin,
   createAdmin,
   getAdminById,
   getAllAdmins,
@@ -11,6 +13,7 @@ import {
 
 const adminRouter = express.Router();
 
+adminRouter.get('/signin',passport.authenticate('admin-local',{ session: false }), adminSignin);
 adminRouter.get('/courses', getAllCourses);
 adminRouter.get('/courses/:courseId', getCourseById);
 adminRouter.get('/users', getAllUsers);
