@@ -1,3 +1,5 @@
+import jsonwebtoken from 'jsonwebtoken';
+import { EXPIRY, secret } from '../auth/auth.config.js';
 import adminService from "./adminService.js";
 
 export const getAllCourses = async (req, res) => {
@@ -59,7 +61,7 @@ export const adminSignin = async (req, res) => {
     });
   }
 
-  const token = jsonwebtoken.sign({ id: user.id }, secret, {
+  const token = jsonwebtoken.sign({ id: admin.id }, secret, {
     algorithm: 'HS256',
     expiresIn: EXPIRY //10s
   });

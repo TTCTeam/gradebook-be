@@ -135,11 +135,11 @@ export const checkExistedAndRegistAccount = async (req, res, next) => {
       password: password,
       firstname: firstname,
       lastname: lastname,
-      status: USERSTATUS.pending
+      status: USERSTATUS.active
     }
     try {
       const newUser = await createNewUser(user)
-      await activateService.sendActivationMail(newUser.id);
+      
       req.body = {
         username: newUser.username,
         email: newUser.email,
