@@ -1,6 +1,10 @@
 import pkg from 'bcryptjs';
 const { compareSync } = pkg;
-import { createUser, findUserByEmail, findUserByUsername } from "../users/userService.js"
+import {
+  createUser,
+  findUserByEmail,
+  findUserByUsername,
+} from '../users/userService.js';
 import adminService from '../admin/adminService.js';
 
 export async function checkDuplicateUsername(username) {
@@ -24,7 +28,6 @@ export async function checkDuplicateEmail(email) {
 }
 
 export async function checkCredential(usernameOrEmail, password) {
-
   if (!password) return false;
   const hasEmail = await findUserByEmail(usernameOrEmail);
   const hasUsername = await findUserByUsername(usernameOrEmail);
@@ -38,7 +41,6 @@ export async function checkCredential(usernameOrEmail, password) {
       return false;
     }
     return user;
-
   }
   return null;
 }
@@ -53,19 +55,17 @@ export async function createNewUser(newUser) {
 }
 
 export async function checkAdminCredential(username, password) {
-
   if (!password) return false;
-  
+
   const user = await adminService.findAdminByUsername(username);
 
   if (user) {
-    const passwordIsValid = compareSync(password, user.password);
+    const passwordIsValid = password === user.password;
 
     if (!passwordIsValid) {
       return false;
     }
     return user;
-
   }
   return null;
 }
