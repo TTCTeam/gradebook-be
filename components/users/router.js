@@ -2,7 +2,6 @@ import express from "express";
 import { activateAccount, sendActivationMail } from "../activation/activateController.js";
 import { getAllAssignmentByUser, updateUserAssignmentPoint } from "./assignment/userAssignmentController.js";
 import { checkExistedStdudentId, getUserProfile, updateProfile } from "./userController.js";
-
 const userRouter = express.Router();
 userRouter.get('/', getUserProfile);
 userRouter.put('/', checkExistedStdudentId, updateProfile);
