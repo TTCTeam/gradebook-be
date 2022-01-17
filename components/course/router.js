@@ -13,6 +13,7 @@ import {
   editAssignment,
   getAllAssignmentsOfCourse, updateOrder
 } from './assignment/assignmentController.js';
+import { getGradeReviewsOfCourse } from '../grade-review/gradeReviewController.js';
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.post("/:courseId/assignments", createAssignment);
 router.put("/:courseId/assignments/:assignmentId", editAssignment);
 router.delete("/:courseId/assignments/:assignmentId", deleteAssignment);
 router.put("/:courseId/assignments", updateOrder);
+router.get("/:courseId/reviews", getGradeReviewsOfCourse);
 
 export default router;
