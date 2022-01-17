@@ -1,4 +1,5 @@
 import { findUserByEmail, findUserById, findUserByUsername, updateUser } from "./userService.js";
+import notificationService from '../notification/notificationService.js';
 
 export const getUserProfile = async (req, res, next) => {
   const { userId } = req;
@@ -16,7 +17,7 @@ export const getUserProfile = async (req, res, next) => {
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
-}
+};
 
 export const updateProfile = async (req, res, next) => {
   const { firstname, lastname, email } = req.body;
@@ -46,7 +47,7 @@ export const updateProfile = async (req, res, next) => {
     res.status(500).send({ message: err.message });
   }
 
-}
+};
 
 export const checkExistedStdudentId = async (req, res, next) => {
   const { userId } = req;
@@ -66,4 +67,10 @@ export const checkExistedStdudentId = async (req, res, next) => {
       message: err.message
     });
   }
-}
+};
+
+export const getNotificationsByUser = async (req, res) => {
+  const { userId } = req;
+  const notifications = await notificationService.getNotificationsByUser(userId);
+  res.status(200).json(notifications);
+};

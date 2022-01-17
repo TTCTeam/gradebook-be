@@ -18,7 +18,6 @@ export const createAssignment = async (req, res) => {
 export const editAssignment = async (req, res) => {
   const { assignmentId } = req.params;
   const assignment = req.body;
-  console.log(req.params);
   const editedAssignment = await assignmentService.editAssignment(assignmentId, assignment);
   res.status(200).json(editedAssignment);
 };

@@ -108,7 +108,7 @@ export const signin = async (req, res) => {
   });
 
   res.status(200).send({
-    ...user,
+    ...user.toJSON(),
     token: token,
     expiresIn: EXPIRY,
   });

@@ -10,7 +10,7 @@ import {
 const assigmentsRouter = express.Router();
 
 assigmentsRouter.get('/',(req,res)=>{res.send({message:"lalala"})});
-assigmentsRouter.get('/public/:assignmentId',publicAssignment);
+assigmentsRouter.put('/:assignmentId/public',publicAssignment);
 assigmentsRouter.get('/:courseId',getAssignmentBoard);
 assigmentsRouter.put('/:courseId/studentlist',uploadStudentList);
 assigmentsRouter.get('/:courseId/studentlist',getStudentList);

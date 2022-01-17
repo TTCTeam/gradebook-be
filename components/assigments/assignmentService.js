@@ -6,6 +6,8 @@ import courseService from '../course/courseService.js';
 import CourseMember from '../course/member/courseMemberModel.js';
 import UserAssignment from '../users/assignment/userAssignmentModel.js';
 import { AssignmentStatus } from '../../contrains/assignment.js';
+import { socketIO } from '../../notificationSocket/notificationSocket.js';
+import Notification from '../notification/notificationModel.js';
 
 const { Op } = pkg;
 
@@ -145,7 +147,20 @@ async function publicAssignment(assignmentId) {
   if (!assignment) {
     throw Error('Assignment id does not exist.');
   }
-  assignment.update({ status: AssignmentStatus.PUBLIC });
+  const publicAssignment = await assignment.update({ status: AssignmentStatus.PUBLIC });
+  const course = await publicAssignment.getCourse();
+  const notification = {
+    title: course.name,
+    content: `Assignment ${publicAssignment.name}'s point has been finalized.`,
+    courseId: course.id,
+    createAt: Date.now()
+  };
+  const students = await course.getMembers({ through: { where: { role: MemberRoles.STUDENT } } });
+  for (const student of students) {
+    await Notification.create({ ...notification, userId: student.id });
+  }
+  socketIO.to(`${course.id}-${MemberRoles.STUDENT}`).emit('notification', notification);
+  return publicAssignment;
 }
 
 export default {

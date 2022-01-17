@@ -1,4 +1,5 @@
 import assignmentService from "./assignmentService.js";
+
 export const uploadStudentList = async (req, res) => {
 
   const { courseId } = req.params;
@@ -10,10 +11,10 @@ export const uploadStudentList = async (req, res) => {
 
     res.status(200).send({ message: "Upload successfully!" });
   } catch (err) {
-    res.status(500).send({ message: "Failed to upload student list" })
+    res.status(500).send({ message: "Failed to upload student list" });
   }
 
-}
+};
 
 export const getStudentList = async (req, res) => {
   const { courseId } = req.params;
@@ -23,9 +24,9 @@ export const getStudentList = async (req, res) => {
     const filteredStudentList = userAssignments.filter(student => student.studentId !== null);
     res.status(200).send(filteredStudentList);
   } catch (err) {
-    res.status(500).send({ message: "Failed to get student list" })
+    res.status(500).send({ message: "Failed to get student list" });
   }
-}
+};
 
 export const getUserAssignmentListInAssignmentId = async (req, res) => {
   const { assignmentId } = req.params;
@@ -35,9 +36,9 @@ export const getUserAssignmentListInAssignmentId = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message
-    })
+    });
   }
-}
+};
 
 export const getAssignmentBoard = async (req, res) => {
   const { courseId } = req.params;
@@ -47,10 +48,10 @@ export const getAssignmentBoard = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message: err.message
-    })
+    });
   }
 
-}
+};
 
 export const uploadAssignmentsListByAssignmentId = async (req, res) => {
 
@@ -66,19 +67,18 @@ export const uploadAssignmentsListByAssignmentId = async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: "Failed to upload student list" });
   }
-}
+};
 
 export const publicAssignment = async (req, res) => {
   const { assignmentId } = req.params;
   try {
     await assignmentService.publicAssignment(assignmentId);
     res.status(200).send({ message: "Public successfully!" });
-  }
-  catch (e) {
+  } catch (e) {
     res.status(400).send(e.message);
   }
-}
+};
 
 export const testController = async (req, res) => {
   res.status(200).send({});
-}
+};
