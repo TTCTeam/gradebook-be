@@ -6,6 +6,7 @@ import { socketIO } from '../../notificationSocket/notificationSocket.js';
 import Course from '../course/courseModel.js';
 import CourseMember from '../course/member/courseMemberModel.js';
 import GradeReview from '../grade-review/gradeReviewModel.js';
+import User from '../users/userModel.js';
 
 const { Op } = pkg;
 
@@ -24,7 +25,7 @@ async function createComment(courseId, gradeReviewId, comment, userId) {
   };
   const member = await CourseMember.findOne({ where: { userId, courseId } });
   if (member.role === MemberRoles.STUDENT) {
-    const lecturers = await course.getMembers({ through: { where: { role: { [Op.or]: [MemberRoles.LECTURER, MemberRoles.OWNER] } } }});
+    const lecturers = await course.getMembers({ through: { where: { role: { [Op.or]: [MemberRoles.LECTURER, MemberRoles.OWNER] } } } });
     for (const lecturer of lecturers) {
       await Notification.create({ ...notification, userId: lecturer.id });
     }
@@ -34,7 +35,7 @@ async function createComment(courseId, gradeReviewId, comment, userId) {
     const gradeReview = await GradeReview.findByPk(gradeReviewId);
     const userAssignment = await gradeReview.getUserAssignment();
     const student = await userAssignment.getCourseMember();
-    const user = await student.getUser();
+    const user = await User.findOne({ where: { username: student.studentId } });
     await Notification.create({ ...notification, userId: user.id });
     socketIO.to(`${user.id}`).emit('notification', notification);
   }
