@@ -83,7 +83,7 @@ async function finalizeAssignmentPoint(courseId, gradeReviewId, point) {
   const course = await Course.findByPk(courseId);
   const assignment = await userAssignment.getAssignment();
   const student = await userAssignment.getCourseMember();
-  const user = await student.getUser();
+  const user = await User.findOne({ where: { username: student.studentId } });
   const notification = {
     title: course.name,
     content: `Your grade review for ${assignment.name} had final decision`,
