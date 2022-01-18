@@ -14,7 +14,7 @@ import {
   getAllAssignmentsOfCourse, updateOrder
 } from './assignment/assignmentController.js';
 import {
-  createGradeReview,
+  createGradeReview, finalizeGradeReview,
   getGradeReviewById,
   getGradeReviewsOfCourse
 } from '../grade-review/gradeReviewController.js';
@@ -38,6 +38,7 @@ router.put("/:courseId/assignments", updateOrder);
 router.get("/:courseId/reviews", getGradeReviewsOfCourse);
 router.post("/:courseId/reviews", createGradeReview);
 router.get("/:courseId/reviews/:gradeReviewId", getGradeReviewById);
+router.put("/:courseId/reviews/:gradeReviewId/finalize", finalizeGradeReview);
 router.get("/:courseId/reviews/:gradeReviewId/comments", getAllCommentByGradeReviewId);
 router.post("/:courseId/reviews/:gradeReviewId/comments", createComment);
 

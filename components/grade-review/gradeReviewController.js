@@ -19,3 +19,10 @@ export const createGradeReview = async (req, res) => {
   const review = await gradeReviewService.createGradeReview(courseId, gradeReview);
   res.status(200).json(review);
 };
+
+export const finalizeGradeReview = async (req, res) => {
+  const { courseId, gradeReviewId } = req.params;
+  const { point } = req.body;
+  const userAssignment = await gradeReviewService.finalizeAssignmentPoint(courseId, gradeReviewId, point);
+  res.status(200).json(userAssignment);
+};
