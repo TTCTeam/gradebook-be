@@ -1,6 +1,7 @@
 import GradeReview from './gradeReviewModel.js';
 import CourseMember from '../course/member/courseMemberModel.js';
 import { MemberRoles } from '../../contrains/course.js';
+import User from '../users/userModel.js';
 
 async function getAllByCourseIdAndUserId(courseId, userId) {
   const member = await CourseMember.findOne({ where: { courseId, userId } });
@@ -15,13 +16,16 @@ async function getAllByCourseIdAndUserId(courseId, userId) {
     const member = await userAssignment.getCourseMember();
     mappedGradeReviews.push({
       ...gradeReview.toJSON(),
-      student: { userId: member.userId, studentId: member.studentId, fullname: member.fullname },
+      student: { studentId: member.studentId, fullname: member.fullname },
       assignment: { name: assignment.name, point: assignment.point },
       userAssignment: { id: userAssignment.id, point: userAssignment.point }
     });
   }
   return member.role === MemberRoles.STUDENT
-    ? mappedGradeReviews.filter((gradeReview) => gradeReview.student.userId === userId)
+    ? mappedGradeReviews.filter(async (gradeReview) => {
+      const userMapped = await User.findOne({ where: { username: gradeReview.student.studentId } });
+      return userMapped?.id === userId;
+    })
     : mappedGradeReviews;
 }
 
