@@ -35,4 +35,22 @@ async function getAllByCourseIdAndUserId(courseId, userId) {
   return mappedGradeReviews;
 }
 
-export default { getAllByCourseIdAndUserId };
+async function getGradeReviewById(gradeReviewId) {
+  const gradeReview = await GradeReview.findByPk(gradeReviewId);
+    const userAssignment = await gradeReview.getUserAssignment();
+    const assignment = await userAssignment.getAssignment();
+    const member = await userAssignment.getCourseMember();
+  return {
+    ...gradeReview.toJSON(),
+    student: { studentId: member.studentId, fullname: member.fullname },
+    assignment: { name: assignment.name, point: assignment.point },
+    userAssignment: { id: userAssignment.id, point: userAssignment.point }
+  };
+}
+
+async function createGradeReview(courseId, gradeReview) {
+  console.log(gradeReview);
+  return GradeReview.create({...gradeReview, courseId});
+}
+
+export default { getAllByCourseIdAndUserId, getGradeReviewById, createGradeReview };
