@@ -21,12 +21,18 @@ async function getAllByCourseIdAndUserId(courseId, userId) {
       userAssignment: { id: userAssignment.id, point: userAssignment.point }
     });
   }
-  return member.role === MemberRoles.STUDENT
-    ? mappedGradeReviews.filter(async (gradeReview) => {
+  let res = [];
+  if (member.role === MemberRoles.STUDENT) {
+    for (const gradeReview of mappedGradeReviews) {
       const userMapped = await User.findOne({ where: { username: gradeReview.student.studentId } });
-      return userMapped?.id === userId;
-    })
-    : mappedGradeReviews;
+      if (userMapped?.id === userId) {
+        res.push(gradeReview);
+      }
+    }
+    return res;
+  }
+
+  return mappedGradeReviews;
 }
 
 export default { getAllByCourseIdAndUserId };
